@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Shop;
 use App\Repository\LanguageRepository;
 use App\Repository\ShopRepository;
+use App\Service\ShopNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,9 +59,9 @@ class ApiController extends AbstractController
      *      }     
      * )
      */
-    public function show(int $id, ShopRepository $shopRepository): Response
+    public function show(int $id, ShopRepository $shopRepository, ShopNormalizer $shopNormalizer): Response
     {
         $data = $shopRepository->find($id);
-        return $this->json($data);
+        return $this->json($shopNormalizer->shopNormalizer($data));
     }
 }
