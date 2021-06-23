@@ -1,7 +1,5 @@
 <?php
 
-declare( strict_types = 1 );
-
 namespace App\Controller;
 
 use App\Entity\Shop;
@@ -21,8 +19,6 @@ class ApiController extends AbstractController
     public function languages(LanguageRepository $languageRepository, LanguageNormalizer $languageNormalizer): Response
     {
         $data = $languageRepository->findAll();
-
-        dump($data);
 
         $languages = [];
 
