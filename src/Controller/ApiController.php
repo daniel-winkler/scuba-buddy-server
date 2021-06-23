@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Shop;
 use App\Repository\LanguageRepository;
+use App\Repository\ShopRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,9 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     /**
-     * @Route("", name="languages", methods={"GET"})
+     * @Route("/languages", name="languages", methods={"GET"})
      */
-    public function index(LanguageRepository $languageRepository): Response
+    public function languages(LanguageRepository $languageRepository): Response
     {
         $data = $languageRepository->findAll();
 
@@ -28,5 +30,37 @@ class ApiController extends AbstractController
         // .then(data => console.log(data))
 
         return $this->json($languages);
+    }
+
+    /**
+     * @Route("/shops", name="shops", methods={"GET"})
+     */
+    public function shop(ShopRepository $shopRepository): Response
+    {
+        $data = $shopRepository->findAll();
+
+        $shops = [];
+
+        foreach($data as $shop) {
+            $shops[] = $shop;
+        }
+
+        return $this->json($shops);
+    }
+
+    /**
+     * @Route(
+     *      "/shopdetails/{id}",
+     *      name="shopdetails",
+     *      methods={"GET"},
+     *      requirements={
+     *          "id": "\d+"
+     *      }     
+     * )
+     */
+    public function show(int $id, ShopRepository $shopRepository): Response
+    {
+        $data = $shopRepository->find($id);
+        return $this->json($data);
     }
 }
