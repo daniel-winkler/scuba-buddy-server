@@ -29,11 +29,13 @@ class ShopNormalizer {
         foreach($shop->getLanguages() as $language) {
             array_push($languages, [
                 'id' => $language->getId(),
-                'name' => $language->getName()
+                'name' => $language->getName(),
+                'countrycode' => $language->getCountrycode()
             ]);
         }
 
         $data = [
+            'id' => $shop->getId(),
             'name' => $shop->getName(),
             'location' => $shop->getLocation(),
             'languages' => $languages
