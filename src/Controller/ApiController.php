@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Shop;
+use App\Repository\DestinationRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ShopRepository;
+use App\Service\DestinationNormalizer;
 use App\Service\LanguageNormalizer;
 use App\Service\ShopNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,5 +61,21 @@ class ApiController extends AbstractController
     {
         $data = $shopRepository->find($id);
         return $this->json($shopNormalizer->shopNormalizer($data));
+    }
+
+    /**
+     * @Route("/destinations", name="destinations", methods={"GET"})
+     */
+    public function destinations(DestinationRepository $destinationRepository, DestinationNormalizer $destinationNormalizer): Response
+    {
+        $data = $destinationRepository->findAll();
+
+        $destinations = [];
+
+        foreach($data as $destination) {
+            $destinations[] = $destinationNormalizer->destinationNormalizer($destination);
+        }
+
+        return $this->json($destinations);
     }
 }
