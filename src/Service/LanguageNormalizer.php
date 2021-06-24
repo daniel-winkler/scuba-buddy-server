@@ -26,6 +26,7 @@ class LanguageNormalizer {
         }
 
         $data = [
+            'id' => $language->getId(),
             'name' => $language->getName(),
             'countrycode' => $language->getCountrycode(),
             'shops' => $shops

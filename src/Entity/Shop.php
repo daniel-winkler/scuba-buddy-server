@@ -34,6 +34,12 @@ class Shop
      */
     private $languages;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Destination::class, inversedBy="shops")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $destination;
+
     public function __construct()
     {
         $this->languages = new ArrayCollection();
@@ -88,6 +94,18 @@ class Shop
     public function removeLanguage(Language $language): self
     {
         $this->languages->removeElement($language);
+
+        return $this;
+    }
+
+    public function getDestination(): ?Destination
+    {
+        return $this->destination;
+    }
+
+    public function setDestination(?Destination $destination): self
+    {
+        $this->destination = $destination;
 
         return $this;
     }
