@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -44,6 +46,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private $active;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Divelog::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $divelogs;
+
+    public function __construct()
+    {
+        $this->divelogs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +161,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Divelog[]
+     */
+    public function getDivelogs(): Collection
+    {
+        return $this->divelogs;
+    }
+
+    public function addDivelog(Divelog $divelog): self
+    {
+        if (!$this->divelogs->contains($divelog)) {
+            $this->divelogs[] = $divelog;
+            $divelog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDivelog(Divelog $divelog): self
+    {
+        if ($this->divelogs->removeElement($divelog)) {
+            // set the owning side to null (unless already changed)
+            if ($divelog->getUser() === $this) {
+                $divelog->setUser(null);
+            }
+        }
 
         return $this;
     }
