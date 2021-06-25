@@ -38,6 +38,7 @@ class ShopNormalizer {
             'id' => $shop->getId(),
             'name' => $shop->getName(),
             'location' => $shop->getLocation(),
+            'active' => $shop->getActive(),
             'languages' => $languages
         ];
 
