@@ -18,24 +18,21 @@ class UserController extends AbstractController
      */
     public function register(UserPasswordHasherInterface $hasher, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $data = $request->request;
-        dump($data);
+        $data = json_decode($request->getContent(), true); // recibimos el JSON en formato string, lo decodificamos, lo recogemos y con 'true' nos devuelve un array asociativo
 
         $user = new User();
 
-        $plainPassword = $data->get('newPassword');
+        $plainPassword = $data['newPassword'];
         $hashedPassword = $hasher->hashPassword($user, $plainPassword);
 
-        $user->setUsername($request->get('newUsername'));
-        $user->setEmail($request->get('newEmail'));
+        $user->setUsername($data['newUsername']);
+        $user->setEmail($data['newEmail']);
         $user->setPassword($hashedPassword);
         $user->setActive(true);
 
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($user);
-
-        // TODO: conseguir el POST desde el formulario ($data me lo devuelve vacio) 
+        return $this->json($user); 
     }
 }
