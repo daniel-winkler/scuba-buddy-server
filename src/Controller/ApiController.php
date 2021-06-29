@@ -9,7 +9,9 @@ use App\Repository\ShopRepository;
 use App\Service\DestinationNormalizer;
 use App\Service\LanguageNormalizer;
 use App\Service\ShopNormalizer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -45,6 +47,23 @@ class ApiController extends AbstractController
         }
 
         return $this->json($shops);
+    }
+
+    /**
+     * @Route("/post", name="post_shop", methods={"POST"})
+     */
+    public function postShop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        dump($data);
+        die();
+        // TODO: terminar de recibir el request y crear el POST 
+
+        $shop = new Shop();
+
+
+
+        return $this->json($shop);
     }
 
     /**
