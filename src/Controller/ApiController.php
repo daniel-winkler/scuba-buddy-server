@@ -52,18 +52,32 @@ class ApiController extends AbstractController
     /**
      * @Route("/post", name="post_shop", methods={"POST"})
      */
-    public function postShop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer, Request $request, EntityManagerInterface $entityManager): Response
+    public function postShop(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LanguageRepository $languageRepository,
+        DestinationRepository $destinationRepository,
+        ShopNormalizer $shopNormalizer
+        ): Response
     {
         $data = json_decode($request->getContent(), true);
-        dump($data);
-        die();
-        // TODO: terminar de recibir el request y crear el POST 
-
+        
         $shop = new Shop();
+    
+        $shop->setName($data['shopname']);
+        $shop->setLocation($data['shoplocation']);
+        $shop->setActive(true);
+        $shop->setDestination($destinationRepository->find($data['destination']['id']));
+        
+        foreach($data['badges'] as $badge){
+            $language = $languageRepository->find($badge['id']);
+            $shop->addLanguage($language);
+        }
+       
+        $entityManager->persist($shop);
+        $entityManager->flush();
 
-
-
-        return $this->json($shop);
+        return $this->json($shopNormalizer->shopNormalizer($shop));
     }
 
     /**
