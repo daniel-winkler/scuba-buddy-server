@@ -19,6 +19,23 @@ class ShopRepository extends ServiceEntityRepository
         parent::__construct($registry, Shop::class);
     }
 
+    public function findByTerm(string $term) {
+        $queryBuilder = $this->createQueryBuilder('e');
+        $queryBuilder->where(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('e.name', ':term'),
+                $queryBuilder->expr()->like('e.location', ':term'),
+            )
+        );
+        $queryBuilder->setParameter('term', '%'.$term.'%'); // % hace que en SQL busque el term en cuanlquier parte de la columna (si contiene, empieza, termina, etc)
+        // $queryBuilder->orderBy('e.id', 'ASC');
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Shop[] Returns an array of Shop objects
     //  */

@@ -36,8 +36,20 @@ class ApiController extends AbstractController
     /**
      * @Route("/shops", name="shops", methods={"GET"})
      */
-    public function shop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer): Response
+    public function shop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer, Request $request): Response
     {
+        if($request->query->has('term')) {
+            $shops = $shopRepository->findByTerm($request->query->get('term'));
+
+            $data = [];
+
+            foreach($shops as $shop){
+                $data[] = $shopNormalizer->shopNormalizer($shop);
+            }
+
+            return $this->json($data);
+        }
+
         $data = $shopRepository->findAll();
 
         $shops = [];
