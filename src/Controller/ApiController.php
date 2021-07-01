@@ -38,28 +38,20 @@ class ApiController extends AbstractController
      */
     public function shop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer, Request $request): Response
     {
-        if($request->query->has('term')) {
-            $shops = $shopRepository->findByTerm($request->query->get('term'));
-
-            $data = [];
-
-            foreach($shops as $shop){
-                $data[] = $shopNormalizer->shopNormalizer($shop);
-            }
-
-            return $this->json($data);
+        if ($request->query->has('term')) {
+            $data = $shopRepository->findByTerm($request->query->get('term'));
+        } else {
+            $data = $shopRepository->findAll();
         }
-
-        $data = $shopRepository->findAll();
-
         $shops = [];
-        
-        foreach($data as $shop) {
+
+        foreach($data as $shop){
             $shops[] = $shopNormalizer->shopNormalizer($shop);
         }
 
         return $this->json($shops);
     }
+
 
     /**
      * @Route("/post", name="post_shop", methods={"POST"})
