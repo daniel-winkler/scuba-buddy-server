@@ -41,7 +41,7 @@ class ApiController extends AbstractController
         if ($request->query->has('term')) {
             $data = $shopRepository->findByTerm($request->query->get('term'));
         } else {
-            $data = $shopRepository->findAll();
+            $data = $shopRepository->findBy(['active' => true]);
         }
         $shops = [];
 

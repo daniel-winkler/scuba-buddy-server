@@ -19,14 +19,43 @@ class ShopRepository extends ServiceEntityRepository
         parent::__construct($registry, Shop::class);
     }
 
+    // public function findActive($getQueryBuilder = false) {
+    //     $queryBuilder = $this->createQueryBuilder('e')
+    //         ->where('e.active = true');
+
+    //     return $getQueryBuilder ? $queryBuilder : $queryBuilder->getQuery()->getResult();
+    // }
+
+    // public function findByCriteria(array $criteria) {
+    //     $queryBuilder = $this->findActive(true);
+
+    //     if (isset($criteria['terms'])) {
+    //         $queryBuilder->andWhere(
+    //             $queryBuilder->expr()->orX(
+    //                 $queryBuilder->expr()->like('e.name', ':term'),
+    //                 $queryBuilder->expr()->like('e.location', ':term'),
+    //             )
+    //         );
+    //         $queryBuilder->setParameter('term', '%'.$criteria['terms'].'%'); 
+    //     }
+
+    //     if (isset($criteria['country'])) {
+    //         $queryBuilder->join('country c');
+    //         $queryBuilder->where();
+    //         $queryBuilder->setParameter('term', '%'.$term.'%'); 
+    //     }
+    // }
+
     public function findByTerm(string $term) {
         $queryBuilder = $this->createQueryBuilder('e');
+        // $queryBuilder = $this->findActive(true);
         $queryBuilder->where(
             $queryBuilder->expr()->orX(
                 $queryBuilder->expr()->like('e.name', ':term'),
                 $queryBuilder->expr()->like('e.location', ':term'),
             )
         );
+        $queryBuilder->andWhere('e.active = true');
         $queryBuilder->setParameter('term', '%'.$term.'%'); // % hace que en SQL busque el term en cuanlquier parte de la columna (si contiene, empieza, termina, etc)
         // $queryBuilder->orderBy('e.id', 'ASC');
 
