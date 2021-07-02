@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Picture;
 use App\Entity\Shop;
 use App\Repository\DestinationRepository;
 use App\Repository\LanguageRepository;
@@ -67,7 +68,10 @@ class ApiController extends AbstractController
         ): Response
     {
         $data = json_decode($request->getContent(), true);
-        
+
+        dump($request->files);
+        dump($data);
+        die();
         $shop = new Shop();
     
         $shop->setName($data['shopname']);
@@ -80,26 +84,39 @@ class ApiController extends AbstractController
             $shop->addLanguage($language);
         }
 
-        if($request->files->has('avatar')){
-            $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)
+        // foreach($request->files as $file) {
+        //     $picture = new Picture();
 
-            $avatarOriginalFileName = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+        //     // Setear las propiedades del objeto picture.
 
-            $safeFilename = $sluggerInterface->slug($avatarOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
-            $avatarNewFileName = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
+        //     // Renombrar y mover el fichero a su ubicación final.
 
-            try {
-                $avatarFile->move(
-                    $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/avatar',
-                    $avatarNewFileName
-                );
-            } catch (FileException $e) {
-                throw new \Exception($e->getMessage());
-            }
+        //     // Añadas al objeto shop el picture, con $shop->addPicture($picture);
 
-            // $shop->addPicture();
-        }
-       
+        //     // persistir objeto picture en el entity manager.
+
+        // }
+
+        // if($request->files->has('avatar')){
+        //     $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)
+
+        //     $avatarOriginalFileName = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+        //     $safeFilename = $sluggerInterface->slug($avatarOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
+        //     $avatarNewFileName = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
+
+        //     try {
+        //         $avatarFile->move(
+        //             $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
+        //             $avatarNewFileName
+        //         );
+        //     } catch (FileException $e) {
+        //         throw new \Exception($e->getMessage());
+        //     }
+
+        //     $shop->addPicture();
+        // }
+    
         $entityManager->persist($shop);
         $entityManager->flush();
 
