@@ -45,9 +45,15 @@ class Shop
      */
     private $active;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="shop")
+     */
+    private $pictures;
+
     public function __construct()
     {
         $this->languages = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,6 +129,36 @@ class Shop
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setShop($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getShop() === $this) {
+                $picture->setShop(null);
+            }
+        }
 
         return $this;
     }

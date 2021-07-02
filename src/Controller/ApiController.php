@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ApiController extends AbstractController
 {
@@ -61,7 +62,8 @@ class ApiController extends AbstractController
         EntityManagerInterface $entityManager,
         LanguageRepository $languageRepository,
         DestinationRepository $destinationRepository,
-        ShopNormalizer $shopNormalizer
+        ShopNormalizer $shopNormalizer,
+        SluggerInterface $sluggerInterface
         ): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -76,6 +78,26 @@ class ApiController extends AbstractController
         foreach($data['badges'] as $badge){
             $language = $languageRepository->find($badge['id']);
             $shop->addLanguage($language);
+        }
+
+        if($request->files->has('avatar')){
+            $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)
+
+            $avatarOriginalFileName = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+            $safeFilename = $sluggerInterface->slug($avatarOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
+            $avatarNewFileName = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
+
+            try {
+                $avatarFile->move(
+                    $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/avatar',
+                    $avatarNewFileName
+                );
+            } catch (FileException $e) {
+                throw new \Exception($e->getMessage());
+            }
+
+            // $shop->addPicture();
         }
        
         $entityManager->persist($shop);
