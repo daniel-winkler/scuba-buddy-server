@@ -14,6 +14,16 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
+     * @Route("/users/me", name="register", methods={"GET"})
+     *
+     */
+    public function me(): Response
+    {
+        // TODO: manera de devolver info de user en el login
+        return $this->getUser();
+    }
+
+    /**
      * @Route("/register", name="register", methods={"POST"})
      */
     public function register(UserPasswordHasherInterface $hasher, Request $request, EntityManagerInterface $entityManager): Response
