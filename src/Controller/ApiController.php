@@ -11,6 +11,7 @@ use App\Service\DestinationNormalizer;
 use App\Service\LanguageNormalizer;
 use App\Service\ShopNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,18 +39,46 @@ class ApiController extends AbstractController
     /**
      * @Route("/shops", name="shops", methods={"GET"})
      */
-    public function shop(ShopRepository $shopRepository, ShopNormalizer $shopNormalizer, Request $request): Response
+    public function shop(
+        ShopRepository $shopRepository,
+        ShopNormalizer $shopNormalizer,
+        Request $request,
+        PaginatorInterface $paginator,
+        EntityManagerInterface $em
+        ): Response
     {
+        // TODO: paginacion por hacer 
+
+        //https://www.babdev.com/open-source/packages/pagerfanta/docs/3.x/usage
+        
+        // $dql   = "SELECT a FROM AcmeMainBundle:Article a";
+        // $query = $em->createQuery($dql);
+        $qb = $em->createQueryBuilder();
+        $qb->select('s')->from('app:Shop', 's');
+        $query = $qb->getQuery();
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            10 /*limit per page*/
+        );
+
         if ($request->query->has('term')) {
             $data = $shopRepository->findByTerm($request->query->get('term'));
         } else {
             $data = $shopRepository->findBy(['active' => true]);
         }
+
         $shops = [];
 
         foreach($data as $shop){
             $shops[] = $shopNormalizer->shopNormalizer($shop);
         }
+
+        $finaljson = [
+            'pagination' => $pagination,
+            'results' => $shops
+        ];
+
 
         return $this->json($shops);
     }
@@ -69,9 +98,9 @@ class ApiController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        dump($request->files);
-        dump($data);
-        die();
+        // dump($request->files);
+        // dump($data);
+        // die();
         $shop = new Shop();
     
         $shop->setName($data['shopname']);
@@ -153,5 +182,16 @@ class ApiController extends AbstractController
         }
 
         return $this->json($destinations);
+    }
+
+    /**
+     * @Route("/security/check-token/", name="destinations", methods={"GET"})
+     */
+    public function check() {
+        if ($this->getUser()) {
+            return 'ok';
+        }
+
+            return 'ko';
     }
 }
