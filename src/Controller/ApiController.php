@@ -99,7 +99,7 @@ class ApiController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        // dump($request->files);
+        dump($data);
         // dump($data);
         // die();
         $shop = new Shop();
@@ -114,18 +114,38 @@ class ApiController extends AbstractController
             $shop->addLanguage($language);
         }
 
-        // foreach($request->files as $file) {
-        //     $picture = new Picture();
+        // TODO: crear un endpoint distinto para hacer post con content-type: multipart/form-data??
+        foreach($request->files as $file) {
+            dump($file);
+            $picture = new Picture();
 
-        //     // Setear las propiedades del objeto picture.
+            $fileOriginalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
-        //     // Renombrar y mover el fichero a su ubicación final.
+            $safeFilename = $sluggerInterface->slug($fileOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
+            $pictureNewFileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
 
-        //     // Añadas al objeto shop el picture, con $shop->addPicture($picture);
+            try {
+                $file->move(
+                    $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
+                    $pictureNewFileName
+                );
+            } catch (FileException $e) {
+                throw new \Exception($e->getMessage());
+            }
 
-        //     // persistir objeto picture en el entity manager.
+            $shop->addPicture($picture);
 
-        // }
+            // Setear las propiedades del objeto picture.
+
+            // Renombrar y mover el fichero a su ubicación final.
+
+            // Añadas al objeto shop el picture, con $shop->addPicture($picture);
+
+            // persistir objeto picture en el entity manager.
+            $entityManager->persist($picture);
+            $entityManager->flush();
+
+        }
 
         // if($request->files->has('avatar')){
         //     $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)
