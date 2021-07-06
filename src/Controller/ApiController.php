@@ -47,20 +47,21 @@ class ApiController extends AbstractController
         EntityManagerInterface $em
         ): Response
     {
+        dump($this->getUser());
         // TODO: paginacion por hacer 
 
         //https://www.babdev.com/open-source/packages/pagerfanta/docs/3.x/usage
         
         // $dql   = "SELECT a FROM AcmeMainBundle:Article a";
         // $query = $em->createQuery($dql);
-        $qb = $em->createQueryBuilder();
-        $qb->select('s')->from('app:Shop', 's');
-        $query = $qb->getQuery();
-        $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            10 /*limit per page*/
-        );
+        // $qb = $em->createQueryBuilder();
+        // $qb->select('s')->from('app:Shop', 's');
+        // $query = $qb->getQuery();
+        // $pagination = $paginator->paginate(
+        //     $query, /* query NOT result */
+        //     $request->query->getInt('page', 1), /*page number*/
+        //     10 /*limit per page*/
+        // );
 
         if ($request->query->has('term')) {
             $data = $shopRepository->findByTerm($request->query->get('term'));
@@ -74,10 +75,10 @@ class ApiController extends AbstractController
             $shops[] = $shopNormalizer->shopNormalizer($shop);
         }
 
-        $finaljson = [
-            'pagination' => $pagination,
-            'results' => $shops
-        ];
+        // $finaljson = [
+        //     'pagination' => $pagination,
+        //     'results' => $shops
+        // ];
 
 
         return $this->json($shops);
@@ -184,14 +185,15 @@ class ApiController extends AbstractController
         return $this->json($destinations);
     }
 
-    /**
-     * @Route("/security/check-token/", name="destinations", methods={"GET"})
-     */
-    public function check() {
-        if ($this->getUser()) {
-            return 'ok';
-        }
+//     /**
+//      * @Route("/security/check-token/", name="checktoken", methods={"GET"})
+//      */
+//     public function check(Request $request): Response {
+//         dump($request->request);
+//         if ($this->getUser()) {
+//             return 'ok';
+//         }
 
-            return 'ko';
-    }
+//             return 'ko';
+//     }
 }
