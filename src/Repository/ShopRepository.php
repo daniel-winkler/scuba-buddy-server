@@ -60,9 +60,18 @@ class ShopRepository extends ServiceEntityRepository
         // $queryBuilder->orderBy('e.id', 'ASC');
 
         $query = $queryBuilder->getQuery();
-        $result = $query->getResult();
+        return $query; // devuelve la query porque lo necesita el paginator
 
-        return $result;
+        // $result = $query->getResult();
+
+        // return $result;
+    }
+
+    public function findByLanguages(array $languages) {
+        $queryBuilder = $this->createQueryBuilder('s')->join('Language', 'l'); //TODO: conseguir el filtro de idiomas en la busqueda
+        foreach($languages as $language){
+            $queryBuilder->where('l.countrycode', $language);
+        }
     }
 
     // /**
