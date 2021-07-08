@@ -47,48 +47,31 @@ class ApiController extends AbstractController
         EntityManagerInterface $em
         ): Response
     {
-        dump($this->getUser());
-        // TODO: paginacion por hacer 
-
-        //https://www.babdev.com/open-source/packages/pagerfanta/docs/3.x/usage
-        
-        // $dql   = "SELECT a FROM AcmeMainBundle:Article a";
-        // $query = $em->createQuery($dql);
-        // $qb = $em->createQueryBuilder();
-        // $qb->select('s')->from('app:Shop', 's');
-        // $query = $qb->getQuery();
-        // $pagination = $paginator->paginate(
-        //     $query, /* query NOT result */
-        //     $request->query->getInt('page', 1), /*page number*/
-        //     10 /*limit per page*/
-        // );
 
         if ($request->query->has('term')) {
             $query = $shopRepository->findByTerm($request->query->get('term')); // recibe la query del shopRepository
-            $pagination = $paginator->paginate(
-                     $query, /* query NOT result */
-                     $request->query->getInt('page', 1), /*page number*/
-                     10 /*limit per page*/
-                );
-            dump($pagination);
-            die();
         } else {
-            $data = $shopRepository->findBy(['active' => true]); // cambiar el findBy para poder devolver una query?
+            $query = $shopRepository->findActive(); // cambiar el findBy para poder devolver una query?
         }
 
-        $shops = [];
+        $paginatedData = $shopRepository->getPagination($paginator, $request, $query);
 
+        $data = $paginatedData->getItems();
         foreach($data as $shop){
             $shops[] = $shopNormalizer->shopNormalizer($shop);
         }
 
-        // $finaljson = [
-        //     'pagination' => $pagination,
-        //     'results' => $shops
-        // ];
+        $totalPages = $paginatedData->getTotalItemCount() / $paginatedData->getItemNumberPerPage();
+
+        $finaljson = [
+            'total_results' => $paginatedData->getTotalItemCount(),
+            'total_pages' => ceil($totalPages), // ceil redondea un numero decimal al proximo numero entero, para conseguir el numero de paginas exactas.
+            'current_page' => $paginatedData->getCurrentPageNumber(),
+            'results' => $shops
+        ];
 
 
-        return $this->json($shops);
+        return $this->json($finaljson);
     }
 
 

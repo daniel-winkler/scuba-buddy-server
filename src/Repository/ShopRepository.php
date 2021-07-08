@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Shop;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Shop|null find($id, $lockMode = null, $lockVersion = null)
@@ -45,6 +47,24 @@ class ShopRepository extends ServiceEntityRepository
     //         $queryBuilder->setParameter('term', '%'.$term.'%'); 
     //     }
     // }
+    
+    public function getPagination(PaginatorInterface $paginator, Request $request, $query){
+        $pagination = $paginator->paginate(
+                    $query, /* query NOT result */
+                    $request->query->getInt('page', 1), /*page number*/
+                    6 /*limit per page*/
+                    );
+        return $pagination;
+    }
+
+    public function findActive(){
+
+        $queryBuilder = $this->createQueryBuilder('a');
+        $queryBuilder->where('a.active = true');
+        $query = $queryBuilder->getQuery();
+
+        return $query; // devuelve la query porque lo necesita el paginator
+    }
 
     public function findByTerm(string $term) {
         $queryBuilder = $this->createQueryBuilder('e');
