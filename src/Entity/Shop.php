@@ -50,6 +50,11 @@ class Shop
      */
     private $pictures;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Coords::class, mappedBy="shop", cascade={"persist", "remove"})
+     */
+    private $coords;
+
     public function __construct()
     {
         $this->languages = new ArrayCollection();
@@ -159,6 +164,23 @@ class Shop
                 $picture->setShop(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCoords(): ?Coords
+    {
+        return $this->coords;
+    }
+
+    public function setCoords(Coords $coords): self
+    {
+        // set the owning side of the relation if necessary
+        if ($coords->getShop() !== $this) {
+            $coords->setShop($this);
+        }
+
+        $this->coords = $coords;
 
         return $this;
     }
