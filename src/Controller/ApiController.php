@@ -56,9 +56,13 @@ class ApiController extends AbstractController
 
         $paginatedData = $shopRepository->getPagination($paginator, $request, $query);
 
-        $data = $paginatedData->getItems();
-        foreach($data as $shop){
-            $shops[] = $shopNormalizer->shopNormalizer($shop);
+        if (count($paginatedData->getItems()) !== 0) { // nos protege si el resultado de la query es 0.
+            $data = $paginatedData->getItems();
+            foreach($data as $shop){
+                $shops[] = $shopNormalizer->shopNormalizer($shop);
+            }
+        } else {
+            $shops = [];
         }
 
         $totalPages = $paginatedData->getTotalItemCount() / $paginatedData->getItemNumberPerPage();
