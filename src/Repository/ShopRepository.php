@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Shop;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Shop|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,7 +46,7 @@ class ShopRepository extends ServiceEntityRepository
     //     }
     // }
     
-    public function getPagination(PaginatorInterface $paginator, Request $request, $query){
+    public function getPagination($paginator, $request, $query){
         $pagination = $paginator->paginate(
                     $query, /* query NOT result */
                     $request->query->getInt('page', 1), /*page number*/
