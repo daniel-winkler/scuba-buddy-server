@@ -51,7 +51,7 @@ class ApiController extends AbstractController
         if ($request->query->has('term')) {
             $query = $shopRepository->findByTerm($request->query->get('term')); // recibe la query del shopRepository
         } else {
-            $query = $shopRepository->findActive(); // cambiar el findBy para poder devolver una query?
+            $query = $shopRepository->findActive();
         }
 
         $paginatedData = $shopRepository->getPagination($paginator, $request, $query);
