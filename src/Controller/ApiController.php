@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Coords;
 use App\Entity\Picture;
 use App\Entity\Shop;
 use App\Repository\DestinationRepository;
@@ -93,9 +94,6 @@ class ApiController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        dump($data);
-        // dump($data);
-        // die();
         $shop = new Shop();
     
         $shop->setName($data['shopname']);
@@ -160,6 +158,15 @@ class ApiController extends AbstractController
 
         //     $shop->addPicture();
         // }
+
+        $coords = new Coords();
+        $coords->setLatitude($data['coords']['lat']);
+        $coords->setLongitude($data['coords']['lng']);
+
+        $entityManager->persist($coords);
+        // $entityManager->flush();
+
+        $shop->setCoords($coords);
     
         $entityManager->persist($shop);
         $entityManager->flush();
