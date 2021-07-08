@@ -34,10 +34,25 @@ class ShopNormalizer {
             ]);
         }
 
+        if($shop->getCoords()) {
+            $coords = [
+                'lat' => $shop->getCoords()->getLatitude(),
+                'lng' => $shop->getCoords()->getLongitude()
+            ];
+        } else {
+            $coords = [
+                'lat' => 0,
+                'lng' => 0
+            ];
+        }
+
+        
+
         $data = [
             'id' => $shop->getId(),
             'name' => $shop->getName(),
             'location' => $shop->getLocation(),
+            'coords' => $coords,
             'active' => $shop->getActive(),
             'languages' => $languages
         ];
