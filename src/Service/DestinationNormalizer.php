@@ -16,19 +16,19 @@ class DestinationNormalizer {
 
     public function destinationNormalizer(Destination $destination): ?array {
 
-        $shops = [];
+        // $shops = [];
         
-        foreach($destination->getShops() as $shop) {
-            array_push($shops, [
-                'id' => $shop->getId(),
-                'name' => $shop->getName()
-            ]);
-        }
+        // foreach($destination->getShops() as $shop) {
+        //     array_push($shops, [
+        //         'id' => $shop->getId(),
+        //         'name' => $shop->getName()
+        //     ]);
+        // }
 
         $data = [
             'id' => $destination->getId(),
             'name' => $destination->getName(),
-            'shops' => $shops
+            // 'shops' => $shops
         ];
 
         return $data;

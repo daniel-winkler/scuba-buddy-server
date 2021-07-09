@@ -207,15 +207,15 @@ class ApiController extends AbstractController
         return $this->json($destinations);
     }
 
-//     /**
-//      * @Route("/api/check-token/", name="checktoken", methods={"GET"})
-//      */
-//     public function check(Request $request): Response {
-//         dump($request->request);
-//         if ($this->getUser()) {
-//             return 'ok';
-//         }
+    // /**
+    //  * @Route("/api/check-token/", name="checktoken", methods={"GET"})
+    //  */
+    // public function check(Request $request) {
+    //     dump($request->request);
+    //     if ($this->getUser()) {
+    //         return 'ok';
+    //     }
 
-//             return 'ko';
-//     }
+    //         return 'ko';
+    // }
 }

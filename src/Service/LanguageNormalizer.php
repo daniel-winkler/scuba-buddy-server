@@ -16,20 +16,20 @@ class LanguageNormalizer {
 
     public function languageNormalizer(Language $language): ?array {
 
-        $shops = [];
+        // $shops = [];
         
-        foreach($language->getShops() as $shop) {
-            array_push($shops, [
-                'id' => $shop->getId(),
-                'name' => $shop->getName()
-            ]);
-        }
+        // foreach($language->getShops() as $shop) {
+        //     array_push($shops, [
+        //         'id' => $shop->getId(),
+        //         'name' => $shop->getName()
+        //     ]);
+        // }
 
         $data = [
             'id' => $language->getId(),
             'name' => $language->getName(),
             'countrycode' => $language->getCountrycode(),
-            'shops' => $shops
+            // 'shops' => $shops
         ];
 
         return $data;
