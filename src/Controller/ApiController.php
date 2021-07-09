@@ -14,6 +14,7 @@ use App\Service\ShopNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,7 +82,7 @@ class ApiController extends AbstractController
 
 
     /**
-     * @Route("/post", name="post_shop", methods={"POST"})
+     * @Route("/api/post", name="post_shop", methods={"POST"})
      */
     public function postShop(
         Request $request,
@@ -207,7 +208,7 @@ class ApiController extends AbstractController
     }
 
 //     /**
-//      * @Route("/security/check-token/", name="checktoken", methods={"GET"})
+//      * @Route("/api/check-token/", name="checktoken", methods={"GET"})
 //      */
 //     public function check(Request $request): Response {
 //         dump($request->request);
