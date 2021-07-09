@@ -52,6 +52,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $divelogs;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Shop::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $shop;
+
     public function __construct()
     {
         $this->divelogs = new ArrayCollection();
@@ -191,6 +196,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $divelog->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShop(): ?Shop
+    {
+        return $this->shop;
+    }
+
+    public function setShop(?Shop $shop): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($shop === null && $this->shop !== null) {
+            $this->shop->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($shop !== null && $shop->getUser() !== $this) {
+            $shop->setUser($this);
+        }
+
+        $this->shop = $shop;
 
         return $this;
     }

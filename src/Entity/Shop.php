@@ -55,6 +55,11 @@ class Shop
      */
     private $coords;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="shop", cascade={"persist", "remove"})
+     */
+    private $user;
+
     public function __construct()
     {
         $this->languages = new ArrayCollection();
@@ -181,6 +186,18 @@ class Shop
         }
 
         $this->coords = $coords;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
