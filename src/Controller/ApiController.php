@@ -8,6 +8,7 @@ use App\Entity\Shop;
 use App\Repository\DestinationRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\ShopRepository;
+use App\Repository\UserRepository;
 use App\Service\DestinationNormalizer;
 use App\Service\LanguageNormalizer;
 use App\Service\ShopNormalizer;
@@ -90,17 +91,21 @@ class ApiController extends AbstractController
         LanguageRepository $languageRepository,
         DestinationRepository $destinationRepository,
         ShopNormalizer $shopNormalizer,
-        SluggerInterface $sluggerInterface
+        SluggerInterface $sluggerInterface,
+        UserRepository $userRepository
         ): Response
     {
         $data = json_decode($request->getContent(), true);
-
+        
         $shop = new Shop();
-    
+        
         $shop->setName($data['shopname']);
         $shop->setLocation($data['shoplocation']);
         $shop->setActive(true);
         $shop->setDestination($destinationRepository->find($data['destination']['id']));
+
+        $userId = $this->getUser()->getId();
+        $shop->setUser($userRepository->find($userId));
         
         foreach($data['badges'] as $badge){
             $language = $languageRepository->find($badge['id']);
@@ -108,37 +113,37 @@ class ApiController extends AbstractController
         }
 
         // TODO: crear un endpoint distinto para hacer post con content-type: multipart/form-data??
-        foreach($request->files as $file) {
-            dump($file);
-            $picture = new Picture();
+        // foreach($request->files as $file) {
+        //     dump($file);
+        //     $picture = new Picture();
 
-            $fileOriginalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        //     $fileOriginalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
-            $safeFilename = $sluggerInterface->slug($fileOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
-            $pictureNewFileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
+        //     $safeFilename = $sluggerInterface->slug($fileOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
+        //     $pictureNewFileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
 
-            try {
-                $file->move(
-                    $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
-                    $pictureNewFileName
-                );
-            } catch (FileException $e) {
-                throw new \Exception($e->getMessage());
-            }
+        //     try {
+        //         $file->move(
+        //             $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
+        //             $pictureNewFileName
+        //         );
+        //     } catch (FileException $e) {
+        //         throw new \Exception($e->getMessage());
+        //     }
 
-            $shop->addPicture($picture);
+        //     $shop->addPicture($picture);
 
-            // Setear las propiedades del objeto picture.
+        //     // Setear las propiedades del objeto picture.
 
-            // Renombrar y mover el fichero a su ubicación final.
+        //     // Renombrar y mover el fichero a su ubicación final.
 
-            // Añadas al objeto shop el picture, con $shop->addPicture($picture);
+        //     // Añadas al objeto shop el picture, con $shop->addPicture($picture);
 
-            // persistir objeto picture en el entity manager.
-            $entityManager->persist($picture);
-            $entityManager->flush();
+        //     // persistir objeto picture en el entity manager.
+        //     $entityManager->persist($picture);
+        //     $entityManager->flush();
 
-        }
+        // }
 
         // if($request->files->has('avatar')){
         //     $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)

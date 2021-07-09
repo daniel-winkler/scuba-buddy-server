@@ -42,7 +42,8 @@ class UserController extends AbstractController
      */
     public function dashboard(): Response
     {
-        dump($this->getUser());
+        dump($this->getUser()->getShop());
+        die();
         return $this->getUser();
     }
 }
