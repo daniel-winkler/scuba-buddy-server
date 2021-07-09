@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\ShopNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,10 +41,13 @@ class UserController extends AbstractController
     /**
      * @Route("/api/dashboard", name="dashboard", methods={"GET"})
      */
-    public function dashboard(): Response
+    public function dashboard(ShopNormalizer $shopNormalizer): Response
     {
-        dump($this->getUser()->getShop());
-        die();
-        return $this->getUser();
+        if ($this->getUser()->getShop()) {
+            $shopData = $this->getUser()->getShop();
+            $shop = $shopNormalizer->shopNormalizer($shopData);
+            
+            return $this->json($shop);
+        }
     }
 }
