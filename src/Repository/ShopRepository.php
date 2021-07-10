@@ -66,7 +66,6 @@ class ShopRepository extends ServiceEntityRepository
 
     public function findByTerm(string $term) {
         $queryBuilder = $this->createQueryBuilder('e');
-        // $queryBuilder = $this->findActive(true);
         $queryBuilder->where(
             $queryBuilder->expr()->orX(
                 $queryBuilder->expr()->like('e.name', ':term'),
