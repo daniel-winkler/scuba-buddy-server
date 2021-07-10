@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\ShopRepository;
 use App\Service\ShopNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,10 +45,35 @@ class UserController extends AbstractController
     public function dashboard(ShopNormalizer $shopNormalizer): Response
     {
         if ($this->getUser()->getShop()) {
+            dump($this->getUser()->getShop()->getId());
             $shopData = $this->getUser()->getShop();
             $shop = $shopNormalizer->shopNormalizer($shopData);
             
             return $this->json($shop);
         }
+    }
+
+    /**
+     * @Route("/api/delete", name="delete", methods={"PUT"})
+     */
+    public function delete(ShopNormalizer $shopNormalizer, ShopRepository $shopRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        
+        $shopID = $user->getShop()->getId();
+        
+        $shop = $shopRepository->find($shopID);
+        
+        $shop->setActive(false);
+        
+        $user->setShop(null);
+
+        $entityManager->persist($user);
+        $entityManager->persist($shop);
+        $entityManager->flush();
+        
+        
+        return $this->json($shopNormalizer->shopNormalizer($shop));
+        
     }
 }
