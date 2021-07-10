@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\ShopRepository;
 use App\Service\ShopNormalizer;
+use App\Service\UserNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,21 +43,19 @@ class UserController extends AbstractController
     /**
      * @Route("/api/dashboard", name="dashboard", methods={"GET"})
      */
-    public function dashboard(ShopNormalizer $shopNormalizer): Response
+    public function dashboard(UserNormalizer $userNormalizer, ShopNormalizer $shopNormalizer): Response
     {
-        if ($this->getUser()->getShop()) {
-            dump($this->getUser()->getShop()->getId());
-            $shopData = $this->getUser()->getShop();
-            $shop = $shopNormalizer->shopNormalizer($shopData);
-            
-            return $this->json($shop);
-        }
+        $userData = $this->getUser();
+        $user = $userNormalizer->userNormalizer($userData, $shopNormalizer); // pasamos el normalizador de shop para que el normalizador de users compruebe que tiene uno asociado
+
+        return $this->json($user);
+        
     }
 
     /**
      * @Route("/api/delete", name="delete", methods={"PUT"})
      */
-    public function delete(ShopNormalizer $shopNormalizer, ShopRepository $shopRepository, EntityManagerInterface $entityManager): Response
+    public function delete(ShopRepository $shopRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         
@@ -73,7 +72,10 @@ class UserController extends AbstractController
         $entityManager->flush();
         
         
-        return $this->json($shopNormalizer->shopNormalizer($shop));
+        return $this->json([
+            'message' => "Shop has been removed"
+        ],
+        Response::HTTP_OK);
         
     }
 }
