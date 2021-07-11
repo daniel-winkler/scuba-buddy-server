@@ -59,23 +59,36 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         
+        if(!$user->getShop()){
+
+            return $this->json([
+                'message' => "Shop not found"
+            ],
+                Response::HTTP_NOT_FOUND
+            );
+
+        } 
+
         $shopID = $user->getShop()->getId();
-        
+    
+    
         $shop = $shopRepository->find($shopID);
-        
+
+        // ejecutamos un 'soft delete', cambiando la propiedad active de la entidad Shop a falso, y vaciando la propiedad shop del usuario como null.
         $shop->setActive(false);
-        
         $user->setShop(null);
 
         $entityManager->persist($user);
         $entityManager->persist($shop);
         $entityManager->flush();
-        
-        
+    
+    
         return $this->json([
             'message' => "Shop has been removed"
         ],
-        Response::HTTP_OK);
+            Response::HTTP_OK
+        );
+        
         
     }
 }
