@@ -46,12 +46,17 @@ class ShopNormalizer {
             ];
         }
 
+        $destination = [
+            'id' => $shop->getDestination()->getId(),
+            'name' => $shop->getDestination()->getName()
+        ];
         
 
         $data = [
             'id' => $shop->getId(),
             'name' => $shop->getName(),
             'location' => $shop->getLocation(),
+            'destination' => $destination,
             'coords' => $coords,
             'active' => $shop->getActive(),
             'languages' => $languages
