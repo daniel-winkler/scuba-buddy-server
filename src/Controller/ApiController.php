@@ -46,8 +46,7 @@ class ApiController extends AbstractController
         ShopRepository $shopRepository,
         ShopNormalizer $shopNormalizer,
         Request $request,
-        PaginatorInterface $paginator,
-        EntityManagerInterface $em
+        PaginatorInterface $paginator
         ): Response
     {
 
@@ -177,7 +176,7 @@ class ApiController extends AbstractController
         $entityManager->persist($shop);
         $entityManager->flush();
 
-        return $this->json($shopNormalizer->shopNormalizer($shop));
+        return $this->json($shopNormalizer->shopNormalizer($shop), Response::HTTP_CREATED);
     }
 
     /**
