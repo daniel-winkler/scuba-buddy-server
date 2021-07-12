@@ -86,9 +86,12 @@ class ShopRepository extends ServiceEntityRepository
 
     public function findByLanguages(array $languages) {
         $queryBuilder = $this->createQueryBuilder('s')->join('Language', 'l'); //TODO: conseguir el filtro de idiomas en la busqueda
+        $queryBuilder->where('s.active = true');
         foreach($languages as $language){
-            $queryBuilder->where('l.countrycode', $language);
+            $queryBuilder->andWhere('l.countrycode', $language);
         }
+        $query = $queryBuilder->getQuery();
+        return $query; // devuelve la query porque lo necesita el paginator
     }
 
     // /**
