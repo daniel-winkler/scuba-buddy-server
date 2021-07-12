@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\CoordsRepository;
+use App\Repository\DestinationRepository;
+use App\Repository\LanguageRepository;
 use App\Repository\ShopRepository;
+use App\Repository\UserRepository;
 use App\Service\ShopNormalizer;
 use App\Service\UserNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,6 +57,53 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/api/update", name="update_shop", methods={"PUT"})
+     */
+    public function postShop(
+        Request $request,
+        LanguageRepository $languageRepository,
+        DestinationRepository $destinationRepository,
+        ShopNormalizer $shopNormalizer,
+        ShopRepository $shopRepository,
+        CoordsRepository $coordsRepository,
+        EntityManagerInterface $entityManager
+        ): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $shopID = $this->getUser()->getShop()->getID();
+        $shop = $shopRepository->find($shopID);
+        
+        $shop->setName($data['shopname']);
+        $shop->setLocation($data['shoplocation']);
+        $shop->setDestination($destinationRepository->find($data['destination']['id']));
+
+        foreach($shop->getLanguages() as $lang){
+            $language = $languageRepository->find($lang->getID());
+            $shop->removeLanguage($language);
+        }
+        
+        foreach($data['badges'] as $badge){
+            $language = $languageRepository->find($badge['id']);
+            $shop->addLanguage($language);
+        }
+
+        $coordsID = $this->getUser()->getShop()->getCoords()->getId();
+        $coords = $coordsRepository->find($coordsID);
+
+        $coords->setLatitude($data['coords']['lat']);
+        $coords->setLongitude($data['coords']['lng']);
+
+        $shop->setCoords($coords);
+
+        $entityManager->persist($shop);
+        $entityManager->flush();
+
+        return $this->json($shopNormalizer->shopNormalizer($shop), Response::HTTP_ACCEPTED);
+    }
+
+
+    /**
      * @Route("/api/delete", name="delete", methods={"PUT"})
      */
     public function delete(ShopRepository $shopRepository, EntityManagerInterface $entityManager): Response
@@ -86,7 +137,7 @@ class UserController extends AbstractController
         return $this->json([
             'message' => "Shop has been removed"
         ],
-            Response::HTTP_OK
+            Response::HTTP_ACCEPTED
         );
         
         
