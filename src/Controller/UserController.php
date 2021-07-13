@@ -70,6 +70,14 @@ class UserController extends AbstractController
         ): Response
     {
         $data = json_decode($request->getContent(), true);
+        
+        if (!$this->getUser()->getShop()){
+            return $this->json([
+                'message' => "Shop not found."
+            ],
+            Response::HTTP_NOT_FOUND)
+            ;
+        }
 
         $shopID = $this->getUser()->getShop()->getID();
         $shop = $shopRepository->find($shopID);
