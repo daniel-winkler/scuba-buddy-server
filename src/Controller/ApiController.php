@@ -55,6 +55,11 @@ class ApiController extends AbstractController
         } else {
             $query = $shopRepository->findActive();
         }
+        // if ($request->query->has('lang')) { // TODO: request experimental, queda por resolver
+        //     $query = $shopRepository->findByLanguages($request->query->get('lang'));
+        // } else {
+        //     $query = $shopRepository->findActive();
+        // }
 
         $paginatedData = $shopRepository->getPagination($paginator, $request, $query);
 
