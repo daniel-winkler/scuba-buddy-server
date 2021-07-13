@@ -75,7 +75,7 @@ class UserController extends AbstractController
             return $this->json([
                 'message' => "Shop not found."
             ],
-            Response::HTTP_NOT_FOUND)
+                Response::HTTP_NOT_FOUND)
             ;
         }
 
@@ -147,6 +147,31 @@ class UserController extends AbstractController
         ],
             Response::HTTP_ACCEPTED
         );
+        
+        
+    }
+
+    /**
+     * @Route("/api/account", name="account", methods={"PUT"})
+     */
+    public function account(UserPasswordHasherInterface $hasher, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    {
+        $data = json_decode($request->getContent(), true); // recibimos el JSON en formato string, lo decodificamos, lo recogemos y con 'true' nos devuelve un array asociativo
+
+        $userID = $this->getUser()->getID();
+        $user = $userRepository->find($userID);
+
+        $plainPassword = $data['password'];
+        $hashedPassword = $hasher->hashPassword($user, $plainPassword);
+
+        $user->setUsername($data['username']);
+        $user->setEmail($data['email']);
+        $user->setPassword($hashedPassword);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json($user, Response::HTTP_ACCEPTED); 
         
         
     }
