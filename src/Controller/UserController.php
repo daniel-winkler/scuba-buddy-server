@@ -41,7 +41,11 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($user, Response::HTTP_CREATED); 
+        return $this->json([
+            'message' => "Account created."
+        ],
+            Response::HTTP_CREATED
+        ); 
     }
 
     /**
