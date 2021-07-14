@@ -41,7 +41,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($user); 
+        return $this->json($user, Response::HTTP_CREATED); 
     }
 
     /**
