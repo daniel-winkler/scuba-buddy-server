@@ -100,6 +100,14 @@ class ApiController extends AbstractController
         ): Response
     {
         $data = json_decode($request->getContent(), true);
+
+        if($this->getUser()->getShop()){
+            return $this->json([
+                'message' => "Shop already posted"
+            ],
+                Response::HTTP_FORBIDDEN
+            );
+        }
         
         $shop = new Shop();
         
