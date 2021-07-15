@@ -224,6 +224,28 @@ class ApiController extends AbstractController
         return $this->json($destinations);
     }
 
+    /**
+     * @Route("/clickcounter", name="clickcounter", methods={"PUT"})
+     */
+    public function popular(DestinationRepository $destinationRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $destinationID = json_decode($request->getContent(), true);
+        $destination = $destinationRepository->find($destinationID);
+        $currentCounter = $destination->getClickcounter();
+
+        $destination->setClickcounter($currentCounter + 1);
+
+        $entityManager->persist($destination);
+        $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Ok'
+        ],
+            Response::HTTP_ACCEPTED
+        );
+    }
+
+
     // /**
     //  * @Route("/api/check-token/", name="checktoken", methods={"GET"})
     //  */
