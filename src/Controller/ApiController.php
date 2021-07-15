@@ -227,7 +227,7 @@ class ApiController extends AbstractController
     /**
      * @Route("/clickcounter", name="clickcounter", methods={"PUT"})
      */
-    public function popular(DestinationRepository $destinationRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function clickcounter(DestinationRepository $destinationRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $destinationID = json_decode($request->getContent(), true);
         $destination = $destinationRepository->find($destinationID);
@@ -241,6 +241,24 @@ class ApiController extends AbstractController
         return $this->json([
             'message' => 'Ok'
         ],
+            Response::HTTP_ACCEPTED
+        );
+    }
+
+    /**
+     * @Route("/popular", name="popular", methods={"GET"})
+     */
+    public function popular(DestinationRepository $destinationRepository, Request $request, DestinationNormalizer $destinationNormalizer): Response
+    {
+        $popularDestinations = $destinationRepository->findPopular();
+
+        $destinations = [];
+
+        foreach($popularDestinations as $destination){
+            $destinations[] = $destinationNormalizer->destinationNormalizer($destination);
+        }
+        
+        return $this->json($destinations,
             Response::HTTP_ACCEPTED
         );
     }
