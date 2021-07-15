@@ -268,7 +268,12 @@ class ApiController extends AbstractController
     //  * @Route("/api/check-token/", name="checktoken", methods={"GET"})
     //  */
     // public function check(Request $request) {
-    //     dump($request->request);
+    //     $user = $this->get('security.token_storage')->getToken()->getUser();
+    //     dump($this->get('security.token_storage')->getToken());
+    //     die();
+    //     $jwtManager = $this->get('lexik_jwt_authentication.jwt_manager');
+    //     $token = $jwtManager->create($user);
+    //     die();
     //     if ($this->getUser()) {
     //         return 'ok';
     //     }
