@@ -19,6 +19,15 @@ class DestinationRepository extends ServiceEntityRepository
         parent::__construct($registry, Destination::class);
     }
 
+    public function findPopular(){
+        $queryBuilder = $this->createQueryBuilder('d');
+        $queryBuilder->orderBy('d.clickcounter', 'DESC');
+        $queryBuilder->setMaxResults(3);
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;
+    }
+
     // /**
     //  * @return Destination[] Returns an array of Destination objects
     //  */
