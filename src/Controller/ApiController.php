@@ -50,6 +50,8 @@ class ApiController extends AbstractController
         ): Response
     {
 
+        //TODO: crear query Destinations
+        
         if ($request->query->has('term')) {
             $query = $shopRepository->findByTerm($request->query->get('term')); // recibe la query del shopRepository
         } else {

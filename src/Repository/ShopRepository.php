@@ -84,6 +84,20 @@ class ShopRepository extends ServiceEntityRepository
         // return $result;
     }
 
+    // public function findByDestination(string $destId) { //TODO: crear query Destinations
+    //     $queryBuilder = $this->createQueryBuilder('e')->join('Destinations', 'd');
+    //     $queryBuilder->where(
+    //         $queryBuilder->expr()->orX(
+    //             $queryBuilder->expr()->like('e.destination.id', ':destId')
+    //         )
+    //     );
+    //     $queryBuilder->andWhere('e.active = true');
+    //     $queryBuilder->setParameter('dest', $destId);
+
+    //     $query = $queryBuilder->getQuery();
+    //     return $query; 
+    // }
+
     public function findByLanguages(string $language) { // array $languages
         $queryBuilder = $this->createQueryBuilder('s')->innerJoin('s.languages', 'l'); //TODO: conseguir el filtro de idiomas en la busqueda
         $queryBuilder->where('s.active = true');
