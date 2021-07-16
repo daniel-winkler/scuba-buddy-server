@@ -48,9 +48,9 @@ class ShopRepository extends ServiceEntityRepository
     
     public function getPagination($paginator, $request, $query){
         $pagination = $paginator->paginate(
-                    $query, /* query NOT result */
-                    $request->query->getInt('page', 1), /*page number*/
-                    6 /*limit per page*/
+                    $query, // recibe la QUERY y no el resultado
+                    $request->query->getInt('page', 1), // numero de paǵina por el que empieza por defecto
+                    6 // limite de resultados por página
                     );
         return $pagination;
     }
@@ -78,32 +78,23 @@ class ShopRepository extends ServiceEntityRepository
 
         $query = $queryBuilder->getQuery();
         return $query; // devuelve la query porque lo necesita el paginator
-
-        // $result = $query->getResult();
-
-        // return $result;
     }
 
-    // public function findByDestination(string $destId) { //TODO: crear query Destinations
-    //     $queryBuilder = $this->createQueryBuilder('e')->join('Destinations', 'd');
-    //     $queryBuilder->where(
-    //         $queryBuilder->expr()->orX(
-    //             $queryBuilder->expr()->like('e.destination.id', ':destId')
-    //         )
-    //     );
-    //     $queryBuilder->andWhere('e.active = true');
-    //     $queryBuilder->setParameter('dest', $destId);
-
-    //     $query = $queryBuilder->getQuery();
-    //     return $query; 
-    // }
+    public function findByDestination(int $destId) {
+        $queryBuilder = $this->createQueryBuilder('s')->leftJoin('s.destination', 'd'); // declaramos destination en SINGULAR porque tiene relacion ManyToOne
+        $queryBuilder->where('s.active = true');
+        $queryBuilder->andWhere("d.id = $destId");
+        $query = $queryBuilder->getQuery();
+        dump($query);
+        return $query; // devuelve la query porque lo necesita el paginator
+    }
 
     public function findByLanguages(string $lang) {
-        $queryBuilder = $this->createQueryBuilder('s')->leftJoin('s.languages', 'l');
+        $queryBuilder = $this->createQueryBuilder('s')->leftJoin('s.languages', 'l'); // declaramos languages en PLURAL porque tiene relacion ManyToMany
         $queryBuilder->where('s.active = true');
-        $queryBuilder->andWhere("l.countrycode = '$lang'");
+        $queryBuilder->andWhere("l.countrycode = '$lang'"); //variable entre comillas simples porque recibe un string
         $query = $queryBuilder->getQuery();
-        
+
         return $query; // devuelve la query porque lo necesita el paginator
     }
 
