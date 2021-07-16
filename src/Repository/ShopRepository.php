@@ -98,20 +98,14 @@ class ShopRepository extends ServiceEntityRepository
     //     return $query; 
     // }
 
-    public function findByLanguages(string $language) { // array $languages
-        $queryBuilder = $this->createQueryBuilder('s')->innerJoin('s.languages', 'l'); //TODO: conseguir el filtro de idiomas en la busqueda
+    public function findByLanguages(string $lang) {
+        $queryBuilder = $this->createQueryBuilder('s')->leftJoin('s.languages', 'l');
         $queryBuilder->where('s.active = true');
-        // $queryBuilder->andWhere('l.countrycode', $language);
-        $queryBuilder->andWhere('l.countrycode = :language_id');
-        // foreach($languages as $language){
-            $queryBuilder->setParameter('lang', $language);
-            // $queryBuilder->andWhere('l.countrycode', $language);
-        // }
+        $queryBuilder->andWhere("l.id = $lang");
+        
         $query = $queryBuilder->getQuery();
+           
         return $query; // devuelve la query porque lo necesita el paginator
-
-        // https://stackoverflow.com/questions/26549120/query-on-a-many-to-many-relationship-using-doctrine-with-symfony2
-
     }
 
     // /**
