@@ -53,15 +53,14 @@ class ApiController extends AbstractController
         //TODO: crear query Destinations
         
         if ($request->query->has('term')) {
-            $query = $shopRepository->findByTerm($request->query->get('term')); // recibe la query del shopRepository
+            $query = $shopRepository->findByTerm($request->query->get('term'));
+        } else if ($request->query->has('lang')) {
+            $query = $shopRepository->findByLanguages($request->query->get('lang'));
+        } else if ($request->query->has('dest')) {
+            $query = $shopRepository->findByDestination($request->query->get('dest'));
         } else {
             $query = $shopRepository->findActive();
         }
-        // if ($request->query->has('lang')) { // TODO: request experimental, queda por resolver
-        //     $query = $shopRepository->findByLanguages($request->query->get('lang'));
-        // } else {
-        //     $query = $shopRepository->findActive();
-        // }
 
         $paginatedData = $shopRepository->getPagination($paginator, $request, $query);
 
