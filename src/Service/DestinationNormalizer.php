@@ -41,6 +41,7 @@ class DestinationNormalizer {
         $data = [
             'id' => $destination->getId(),
             'name' => $destination->getName(),
+            'description' => $destination->getDescription(),
             'image' => $destination->getImage()
         ];
 
