@@ -256,7 +256,7 @@ class ApiController extends AbstractController
         $destinations = [];
 
         foreach($popularDestinations as $destination){
-            $destinations[] = $destinationNormalizer->destinationNormalizer($destination);
+            $destinations[] = $destinationNormalizer->popularNormalizer($destination);
         }
         
         return $this->json($destinations,

@@ -34,4 +34,17 @@ class DestinationNormalizer {
         return $data;
 
     }
+
+    public function popularNormalizer(Destination $destination): ?array {
+
+
+        $data = [
+            'id' => $destination->getId(),
+            'name' => $destination->getName(),
+            'image' => $destination->getImage()
+        ];
+
+        return $data;
+
+    }
 }
