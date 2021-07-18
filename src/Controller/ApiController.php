@@ -125,6 +125,8 @@ class ApiController extends AbstractController
             $shop->addLanguage($language);
         }
 
+        
+
         // TODO: crear un endpoint distinto para hacer post con content-type: multipart/form-data??
         // foreach($request->files as $file) {
         //     dump($file);
@@ -191,6 +193,46 @@ class ApiController extends AbstractController
         $entityManager->flush();
 
         return $this->json($shopNormalizer->shopNormalizer($shop), Response::HTTP_CREATED);
+    }
+
+    /**
+    * @Route(
+    *      "/api/uploadshopimage/{id}",
+    *      name="uploadshopimage",
+    *      methods={"POST"},
+    *      requirements={
+    *          "id": "\d+"
+    *      }     
+    * )
+    */
+    public function uploadShopImage(
+        Shop $shop, 
+        Request $request, 
+        EntityManagerInterface $entityManager):Response {
+
+        if($request->files->has('File')) {
+            $avatarFile = $request->files->get('File');
+
+            $newFilename = uniqid().'.'.$avatarFile->guessExtension();
+
+            try {
+                $avatarFile->move(
+                    $request->server->get('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'shops',
+                    $newFilename
+                );
+            } catch (FileException $error) {
+                throw new \Exception($error->getMessage());
+            }
+            $shop->setImage($newFilename);
+        }
+
+        $entityManager->flush();
+        
+        return $this->json([
+            'ok' => true
+        ],
+            Response::HTTP_NO_CONTENT
+        );
     }
 
     /**
