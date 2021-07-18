@@ -24,7 +24,7 @@ class MailerController extends AbstractController
         $email = (new Email())
             ->from($messageData['email'])
             ->to($shopEmail)
-            ->subject('New message from '.$messageData['name'].' ('.$messageData['email'].')')
+            ->subject('New message from: '.$messageData['name'].' ('.$messageData['email'].')')
             ->text($messageData['message']);
 
         $mailer->send($email);

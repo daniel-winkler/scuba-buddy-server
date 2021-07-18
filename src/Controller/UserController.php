@@ -63,7 +63,7 @@ class UserController extends AbstractController
     /**
      * @Route("/api/update", name="update_shop", methods={"PUT"})
      */
-    public function postShop(
+    public function updateShop(
         Request $request,
         LanguageRepository $languageRepository,
         DestinationRepository $destinationRepository,
@@ -158,7 +158,7 @@ class UserController extends AbstractController
     /**
      * @Route("/api/account", name="account", methods={"PUT"})
      */
-    public function account(UserPasswordHasherInterface $hasher, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    public function updateAccount(UserPasswordHasherInterface $hasher, Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $data = json_decode($request->getContent(), true); // recibimos el JSON en formato string, lo decodificamos, lo recogemos y con 'true' nos devuelve un array asociativo
 
