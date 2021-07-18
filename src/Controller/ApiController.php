@@ -264,21 +264,16 @@ class ApiController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/api/token_check", name="token_check")
+     */
 
-    // /**
-    //  * @Route("/api/check-token/", name="checktoken", methods={"GET"})
-    //  */
-    // public function check(Request $request) {
-    //     $user = $this->get('security.token_storage')->getToken()->getUser();
-    //     dump($this->get('security.token_storage')->getToken());
-    //     die();
-    //     $jwtManager = $this->get('lexik_jwt_authentication.jwt_manager');
-    //     $token = $jwtManager->create($user);
-    //     die();
-    //     if ($this->getUser()) {
-    //         return 'ok';
-    //     }
-
-    //         return 'ko';
-    // }
+    public function auth_token(): Response
+    {
+        return $this->json([
+            'ok' => true
+        ],
+            Response::HTTP_ACCEPTED
+        );
+    }
 }
