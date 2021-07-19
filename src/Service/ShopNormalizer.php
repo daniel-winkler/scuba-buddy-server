@@ -50,6 +50,12 @@ class ShopNormalizer {
             'id' => $shop->getDestination()->getId(),
             'name' => $shop->getDestination()->getName()
         ];
+
+        if($shop->getImage()){
+            $imagePath = $shop->getImage();
+        } else {
+            $imagePath = "placeholder.png";
+        }
         
 
         $data = [
@@ -59,7 +65,8 @@ class ShopNormalizer {
             'destination' => $destination,
             'coords' => $coords,
             'active' => $shop->getActive(),
-            'languages' => $languages
+            'languages' => $languages,
+            'image' => $imagePath
         ];
 
         return $data;
