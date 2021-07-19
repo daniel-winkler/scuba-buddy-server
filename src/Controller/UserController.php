@@ -130,12 +130,13 @@ class UserController extends AbstractController
         $shopID = $this->getUser()->getShop()->getID();
         $shop = $shopRepository->find($shopID);
 
-        if ($shop->getImage()){
-            $filename = $shop->getImage();
-            $filesystem->remove("images/shops/" . $filename);
-        }
-
         if($request->files->has('File')) {
+
+            if ($shop->getImage()){
+                $filename = $shop->getImage();
+                $filesystem->remove("images/shops/" . $filename);
+            }
+            
             $avatarFile = $request->files->get('File');
 
             $newFilename = uniqid().'.'.$avatarFile->guessExtension();
