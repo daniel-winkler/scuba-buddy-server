@@ -54,7 +54,7 @@ class ShopNormalizer {
         if($shop->getImage()){
             $imagePath = $shop->getImage();
         } else {
-            $imagePath = "placeholder.png";
+            $imagePath = "placeholder.jpg";
         }
         
 
