@@ -12,6 +12,8 @@ use App\Service\ShopNormalizer;
 use App\Service\UserNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -114,6 +116,50 @@ class UserController extends AbstractController
         return $this->json($shopNormalizer->shopNormalizer($shop), Response::HTTP_ACCEPTED);
     }
 
+    /**
+    * @Route("/api/updateimage", name="update_image", methods={"POST"})
+    */
+    public function updateShopImage(
+        ShopRepository $shopRepository, 
+        Request $request, 
+        EntityManagerInterface $entityManager,
+        Filesystem $filesystem
+        ):Response 
+    {
+
+        $shopID = $this->getUser()->getShop()->getID();
+        $shop = $shopRepository->find($shopID);
+
+        if ($shop->getImage()){
+            $filename = $shop->getImage();
+            $filesystem->remove("images/shops/" . $filename);
+        }
+
+        if($request->files->has('File')) {
+            $avatarFile = $request->files->get('File');
+
+            $newFilename = uniqid().'.'.$avatarFile->guessExtension();
+
+            try {
+                $avatarFile->move(
+                    $request->server->get('DOCUMENT_ROOT') . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'shops',
+                    $newFilename
+                );
+            } catch (FileException $error) {
+                throw new \Exception($error->getMessage());
+            }
+            $shop->setImage($newFilename);
+        }
+
+        $entityManager->persist($shop);
+        $entityManager->flush();
+        
+        return $this->json([
+            'ok' => true
+        ],
+            Response::HTTP_NO_CONTENT
+        );
+    }
 
     /**
      * @Route("/api/delete", name="delete", methods={"PUT"})
