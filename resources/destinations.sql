@@ -1,9 +1,9 @@
-INSERT INTO `destination` (`name`, `clickcounter`)
-VALUES ('South East Asia', '0'),
-('Oceania', 0),
-('Central America', 0),
-('South America', 0),
-('North America', 0),
-('Southern Europe', 0),
-('Caribbean', 0),
-('Eastern Africa', 0);
+INSERT INTO `destination` (`id`, `name`, `clickcounter`, `image`, `description`) VALUES
+(1, 'South East Asia', 0, 'southeastasia.jpg', 'Southeast Asia features an astonishing selection of dive centers in picturesque locations including Thailand, Malaysia, and Indonesia. Whether you’re an experienced diver or just starting out, the pristine beaches of Southeast Asia will capture your heart and fulfill your deepest diving dreams.'),
+(2, 'Oceania', 0, 'oceania.jpg', 'Bask in the otherworldly beauty of the islands of Oceania — French Polynesia, Fiji, Bora Bora, and more. Swim with manta rays and dolphins, enjoy the rich diversity of Fakarava, or take a glass bottom boat excursion. The island cultures offer unique experiences like pearl farming.'),
+(3, 'Central America', 0, 'centralamerica.jpg', 'Submerge yourself in the warm waters of Central America, offering a taste of both the Pacific Ocean and the Caribbean Sea. If you’re looking for dive destinations with a bottomless view of fish and flora, make your way to Costa Rica’s Isla de Coca or Guatemala’s Lake Atitlan. You can even enjoy the coral reef ecosystem off the coast of Honduras.'),
+(4, 'South America', 0, 'southamerica.jpg', 'From the biodiverse waters of Ecuador to the reefs and wrecks of Brazil, divers are sure to love the underwater adventures awaiting them in South America. A range of climates, dive types, and marine animals make this the perfect destination for divers looking for an adventure. While there’s plenty to explore, the Galapagos are a must-see for advanced divers, offering striking views and the chance to swim with hammerhead sharks.'),
+(5, 'North America', 0, 'northamerica.jpg', 'Dive right into the warm Florida waters or explore the chilly floors of the Great Lakes. North America offers a diverse range of dive destinations, from shipwrecks and caverns to reefs and wall dives. And there’s no shortage of marine life either. Divers can expect to see sharks, dolphins, octopus, manatees, and much, much more on these stunning dives'),
+(6, 'Southern Europe', 0, 'southerneurope.jpg', 'With a history stretching back to the ancient world, the Mediterranean will become one of your favorite dive destinations. Retreat to a secluded Greek island or base yourself in Rome; you can customize your dive experience to your every preference. Enjoy the wealth of cultural heritage in between dives.'),
+(7, 'Caribbean', 0, 'caribbean.jpg', 'Home to crystal waters, stunning beaches and a dense population of marine life, the Caribbean is a diver’s playground. The countless islands offer wreck dives, wall dives, and plentiful reefs to explore. Whether you’re looking for a quiet dive with turtles and tropical fish or a thrilling excursion with sharks and rays—it’s all here. But the Caribbean isn’t just for divers. The palm-lined beaches, authentic rum drinks and breathtaking views attract vacationers from all over the world.'),
+(8, 'Eastern Africa', 0, 'easternafrica.jpg', 'East Africa is a remarkable region offering wild beauty and fascinating culture. This region is made up of 19 nations including Burundi, Kenya, Rwanda, Tanzania and Uganda. You can dive in untouched reefs surrounded by barracudas, marlin, turtles and lots of tropical fish and sometimes even a reef shark or inquisitive dolphins.');
