@@ -15,7 +15,8 @@ Paso 4: Dentro de la carpeta raíz crear un archivo .env.local y añadir las sig
 DATABASE_URL="mysql://USUARIO:CONTRASEÑA@127.0.0.1:3306/scuba_buddy?serverVersion=5.7"
 MAILER_DSN=gmail://USUARIO:CONTRASEÑA@default
 ```
-En caso de error, eliminar `?serverVersion=5.7` de la primera linea
+En caso de error de base de datos, eliminar `?serverVersion=5.7` de la primera linea.
+Para el mailer crea una cuenta Gmail y en las configuraciones de seguridad manten el 'Acceso de aplicaciones poco seguras' activado. O puedes utilizar otro [transport](https://symfony.com/doc/current/mailer.html)
 
 Paso 5: Ejecutar comando `symfony console doctrine:database:create`
 
