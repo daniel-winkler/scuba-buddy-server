@@ -56,6 +56,12 @@ class ShopNormalizer {
         } else {
             $imagePath = "placeholder.jpg";
         }
+
+        if($shop->getOverview()){
+            $overview = $shop->getOverview();
+        } else {
+            $overview = "No shop overview available";
+        }
         
 
         $data = [
@@ -66,7 +72,8 @@ class ShopNormalizer {
             'coords' => $coords,
             'active' => $shop->getActive(),
             'languages' => $languages,
-            'image' => $imagePath
+            'image' => $imagePath,
+            'overview' => $overview
         ];
 
         return $data;

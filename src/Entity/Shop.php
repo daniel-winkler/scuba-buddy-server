@@ -65,6 +65,11 @@ class Shop
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $overview;
+
     public function __construct()
     {
         $this->languages = new ArrayCollection();
@@ -215,6 +220,18 @@ class Shop
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getOverview(): ?string
+    {
+        return $this->overview;
+    }
+
+    public function setOverview(?string $overview): self
+    {
+        $this->overview = $overview;
 
         return $this;
     }

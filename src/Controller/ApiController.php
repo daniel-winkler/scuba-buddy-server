@@ -49,8 +49,6 @@ class ApiController extends AbstractController
         PaginatorInterface $paginator
         ): Response
     {
-
-        //TODO: crear query Destinations
         
         if ($request->query->has('term')) {
             $query = $shopRepository->findByTerm($request->query->get('term'));
