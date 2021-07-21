@@ -19,6 +19,15 @@ class MailerController extends AbstractController
     {
         $messageData = json_decode($request->getContent(), true);
         $shop = $shopRepository->find($messageData['shopID']);
+
+        if(!$shop->getUser() || !$shop->getUser()->getEmail()){
+            return $this->json([
+                'ok' => false
+            ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
         $shopEmail = $shop->getUser()->getEmail();
         
         $email = (new Email())
