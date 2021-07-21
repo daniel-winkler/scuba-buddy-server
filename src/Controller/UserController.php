@@ -219,17 +219,23 @@ class UserController extends AbstractController
         $userID = $this->getUser()->getID();
         $user = $userRepository->find($userID);
 
-        $plainPassword = $data['password'];
-        $hashedPassword = $hasher->hashPassword($user, $plainPassword);
+        if ($data['password']) {
+            $plainPassword = $data['password'];
+            $hashedPassword = $hasher->hashPassword($user, $plainPassword);
+            $user->setPassword($hashedPassword);
+        }
 
-        $user->setUsername($data['username']);
-        $user->setEmail($data['email']);
-        $user->setPassword($hashedPassword);
+        $data['username'] ? $user->setUsername($data['username']) : null;
+        $data['email'] ? $user->setEmail($data['email']) : null;
 
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->json($user, Response::HTTP_ACCEPTED); 
+        return $this->json([
+            'ok' => true
+        ], 
+            Response::HTTP_ACCEPTED
+        ); 
         
         
     }
