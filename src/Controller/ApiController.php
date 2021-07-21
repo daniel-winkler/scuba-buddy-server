@@ -123,61 +123,6 @@ class ApiController extends AbstractController
             $shop->addLanguage($language);
         }
 
-        
-
-        // TODO: crear un endpoint distinto para hacer post con content-type: multipart/form-data??
-        // foreach($request->files as $file) {
-        //     dump($file);
-        //     $picture = new Picture();
-
-        //     $fileOriginalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-
-        //     $safeFilename = $sluggerInterface->slug($fileOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
-        //     $pictureNewFileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
-
-        //     try {
-        //         $file->move(
-        //             $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
-        //             $pictureNewFileName
-        //         );
-        //     } catch (FileException $e) {
-        //         throw new \Exception($e->getMessage());
-        //     }
-
-        //     $shop->addPicture($picture);
-
-        //     // Setear las propiedades del objeto picture.
-
-        //     // Renombrar y mover el fichero a su ubicación final.
-
-        //     // Añadas al objeto shop el picture, con $shop->addPicture($picture);
-
-        //     // persistir objeto picture en el entity manager.
-        //     $entityManager->persist($picture);
-        //     $entityManager->flush();
-
-        // }
-
-        // if($request->files->has('avatar')){
-        //     $avatarFile = $request->files->get('avatar'); // crea un objeto con toda la informacion del archivo disponible en la superglobal $_FILES (metodo File Upload)
-
-        //     $avatarOriginalFileName = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-
-        //     $safeFilename = $sluggerInterface->slug($avatarOriginalFileName); // SluggerInterface normaliza los nombres de los ficheros para depurar caracteres raros.
-        //     $avatarNewFileName = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension(); // le añadimos un id unico para evitar problemas de nombre de fichero
-
-        //     try {
-        //         $avatarFile->move(
-        //             $request->server->get('DOCUMENT_ROOT').DIRECTORY_SEPARATOR.'shop/pictures',
-        //             $avatarNewFileName
-        //         );
-        //     } catch (FileException $e) {
-        //         throw new \Exception($e->getMessage());
-        //     }
-
-        //     $shop->addPicture();
-        // }
-
         $coords = new Coords();
         $coords->setLatitude($data['coords']['lat']);
         $coords->setLongitude($data['coords']['lng']);
