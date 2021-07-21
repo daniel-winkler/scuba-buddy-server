@@ -90,6 +90,7 @@ class UserController extends AbstractController
         
         $data['shopname'] !== "" ? $shop->setName($data['shopname']) : null;
         $data['shoplocation'] !== "" ? $shop->setLocation($data['shoplocation']) : null;
+        $data['shopoverview'] !== "" ? $shop->setOverview($data['shopoverview']) : null;
 
         if(count($data['destination']) > 0) {
             $shop->setDestination($destinationRepository->find($data['destination']['id']));
