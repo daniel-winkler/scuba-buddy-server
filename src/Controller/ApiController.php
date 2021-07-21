@@ -114,6 +114,7 @@ class ApiController extends AbstractController
         $shop->setLocation($data['shoplocation']);
         $shop->setActive(true);
         $shop->setDestination($destinationRepository->find($data['destination']['id']));
+        $shop->setOverview($data['shopoverview']);
 
         $userId = $this->getUser()->getId();
         $shop->setUser($userRepository->find($userId));
