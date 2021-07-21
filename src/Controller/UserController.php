@@ -88,18 +88,23 @@ class UserController extends AbstractController
         $shopID = $this->getUser()->getShop()->getID();
         $shop = $shopRepository->find($shopID);
         
-        $shop->setName($data['shopname']);
-        $shop->setLocation($data['shoplocation']);
-        $shop->setDestination($destinationRepository->find($data['destination']['id']));
+        $data['shopname'] !== "" ? $shop->setName($data['shopname']) : null;
+        $data['shoplocation'] !== "" ? $shop->setLocation($data['shoplocation']) : null;
 
-        foreach($shop->getLanguages() as $lang){
-            $language = $languageRepository->find($lang->getID());
-            $shop->removeLanguage($language);
+        if(count($data['destination']) > 0) {
+            $shop->setDestination($destinationRepository->find($data['destination']['id']));
         }
-        
-        foreach($data['badges'] as $badge){
-            $language = $languageRepository->find($badge['id']);
-            $shop->addLanguage($language);
+
+        if(count($data['badges']) > 0) {
+            foreach($shop->getLanguages() as $lang){
+                $language = $languageRepository->find($lang->getID());
+                $shop->removeLanguage($language);
+            }
+            
+            foreach($data['badges'] as $badge){
+                $language = $languageRepository->find($badge['id']);
+                $shop->addLanguage($language);
+            }
         }
 
         $coordsID = $this->getUser()->getShop()->getCoords()->getId();
