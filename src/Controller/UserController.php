@@ -108,13 +108,15 @@ class UserController extends AbstractController
             }
         }
 
-        $coordsID = $this->getUser()->getShop()->getCoords()->getId();
-        $coords = $coordsRepository->find($coordsID);
+        if ($data['coords']['lat'] !== 0 && $data['coords']['lng'] !== 0) {
+            $coordsID = $this->getUser()->getShop()->getCoords()->getId();
+            $coords = $coordsRepository->find($coordsID);
 
-        $coords->setLatitude($data['coords']['lat']);
-        $coords->setLongitude($data['coords']['lng']);
+            $coords->setLatitude($data['coords']['lat']);
+            $coords->setLongitude($data['coords']['lng']);
+            $shop->setCoords($coords);
+        }
 
-        $shop->setCoords($coords);
 
         $entityManager->persist($shop);
         $entityManager->flush();
